@@ -1,4 +1,6 @@
 
+//https://dejaloser.github.io/2016/09/07/Sharing-resources-between-DirectX-and-OpenGL.html
+
 #include <Windows.h>
 #include <d3d9.h>
 #include <assert.h>
