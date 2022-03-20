@@ -1,0 +1,6 @@
+﻿  SharedResource.cpp
+C:\Users\chris\GitHub\WGL_NV_DX\SharedResource.cpp(61,30): warning C4100: 'hPrevInstance': unreferenced formal parameter
+C:\Users\chris\GitHub\WGL_NV_DX\SharedResource.cpp(284,12): warning C4189: 'x': local variable is initialized but not referenced
+C:\Users\chris\GitHub\WGL_NV_DX\SharedResource.cpp(330,13): warning C4189: 'str': local variable is initialized but not referenced
+C:\Users\chris\GitHub\WGL_NV_DX\SharedResource.cpp(308,18): warning C4189: 'success': local variable is initialized but not referenced
+  SharedResource.vcxproj -> C:\Users\chris\GitHub\WGL_NV_DX\Debug\SharedResource.exe

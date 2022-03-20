@@ -1,10 +1,16 @@
 
 #include <Windows.h>
 #include <d3d9.h>
-#include <d3dx9.h>
 #include <assert.h>
 #include "glew.h"
 #include "wglew.h"
+
+#include <DirectXMath.h>
+#include <DirectXPackedVector.h>
+#include <DirectXColors.h>
+#include <DirectXCollision.h>
+
+//#pragma comment(lib, "d3dx10")
 
 #define SCREEN_WIDTH 300
 #define SCREEN_HEIGHT 300
@@ -318,36 +324,45 @@ void InitGL(HWND hWndGL)
     glDisable(GL_DEPTH_TEST);
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
+
+
+//    const GLubyte* 
+       auto str =  glGetString(GL_VENDOR);
 }
 
 
 void RenderDX(void)
 {    
     // Set up transformations
-    D3DXMATRIX matView;
-    D3DXMatrixLookAtLH(&matView,
-                       &D3DXVECTOR3 (0.0f, 0.0f, -10.0f),
-                       &D3DXVECTOR3 (0.0f, 0.0f, 0.0f),
-                       &D3DXVECTOR3 (0.0f, 1.0f, 0.0f));
-    g_pDevice->SetTransform(D3DTS_VIEW, &matView);
+    DirectX::XMMATRIX matView = 
+        DirectX::XMMatrixLookAtLH(
+            { 0.0f, 0.0f, -10.0f },
+            { 0.0f, 0.0f, 0.0f },
+            { 0.0f, 1.0f, 0.0f }
+    );
 
-    D3DXMATRIX matProjection;
-    D3DXMatrixPerspectiveFovLH(&matProjection,
-                               D3DXToRadian(45),
+
+    g_pDevice->SetTransform(D3DTS_VIEW, (D3DMATRIX*)&matView);
+
+    DirectX::XMMATRIX matProjection = DirectX::XMMatrixPerspectiveFovLH(DirectX::XMConvertToRadians(45),
                                (FLOAT)SCREEN_WIDTH / (FLOAT)SCREEN_HEIGHT,
                                1.0f,
                                25.0f);
-    g_pDevice->SetTransform(D3DTS_PROJECTION, &matProjection);
 
-    D3DXMATRIX matTranslate;
-    D3DXMatrixTranslation(&matTranslate, 0.0f, 0.0f, 0.0f);
 
-    D3DXMATRIX matRotate;
+    g_pDevice->SetTransform(D3DTS_PROJECTION, (D3DMATRIX*)&matProjection);
+
+    DirectX::XMMATRIX matTranslate;
+    //D3DXMatrixTranslation
+    matTranslate = DirectX::XMMatrixTranslation(0.0f, 0.0f, 0.0f);
+
+    DirectX::XMMATRIX matRotate;
     static float rot = 0; 
     rot+=0.01;
-    D3DXMatrixRotationZ(&matRotate, rot);
+    //D3DXMatrixRotationZ
+    matRotate = DirectX::XMMatrixRotationZ(rot);
 
-    D3DXMATRIX matTransform = matRotate * matTranslate;
+    DirectX::XMMATRIX matTransform = (matRotate * matTranslate);
 
     HRESULT hr = S_OK;
     hr = g_pDevice->Clear(0, NULL, D3DCLEAR_TARGET, D3DCOLOR_XRGB(40, 40, 60), 1.0f, 0);
@@ -357,7 +372,7 @@ void RenderDX(void)
 
     hr = g_pDevice->SetStreamSource(0, g_pVB, 0, sizeof(CUSTOMVERTEX));
     hr = g_pDevice->SetFVF(CUSTOMFVF);
-    hr = g_pDevice->SetTransform(D3DTS_WORLD, &matTransform);
+    hr = g_pDevice->SetTransform(D3DTS_WORLD, (D3DMATRIX*)&matTransform);
     hr = g_pDevice->DrawPrimitive(D3DPT_TRIANGLELIST, 0, 1);
 
     // Copy the render target to the shared surface
